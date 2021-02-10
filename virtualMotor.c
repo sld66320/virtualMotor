@@ -5,7 +5,6 @@
 #define NULL 0
 #endif
 
-add 1
 s16 intLimit(s16 value, s16 maxValue);
 s16 loopIntLimit(s16 value, s16 minVal, s16 maxVal);
 
