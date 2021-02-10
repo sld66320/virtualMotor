@@ -5,6 +5,7 @@
 #define NULL 0
 #endif
 
+add 1
 s16 intLimit(s16 value, s16 maxValue);
 s16 loopIntLimit(s16 value, s16 minVal, s16 maxVal);
 
@@ -22,7 +23,7 @@ void vmCtrlMsgRecieve(CanRxMsg *msg, u8 canNum)
 	if(msg == NULL)
 		return;
 	
-	//¸ù¾Ý±¨ÎÄidÈ·¶¨Êý¾Ý²¿·Ö¶ÔÓ¦µÄµç»úID
+	//æ ¹æ®æŠ¥æ–‡idç¡®å®šæ•°æ®éƒ¨åˆ†å¯¹åº”çš„ç”µæœºID
 	s16 recieveId;
 	if(msg->StdId == 0x1FF)
 		recieveId = 0x205;
@@ -34,7 +35,7 @@ void vmCtrlMsgRecieve(CanRxMsg *msg, u8 canNum)
 		return;
 		
 	for(s16 i = 0; i < msg->DLC / 2; i++)
-	{ //¸ù¾Ý±¨ÎÄÐÅÏ¢£¬¿ØÖÆµç»ú£¬ÐÞ¸Äµç»úÖÐµÄÊý¾Ý
+	{ //æ ¹æ®æŠ¥æ–‡ä¿¡æ¯ï¼ŒæŽ§åˆ¶ç”µæœºï¼Œä¿®æ”¹ç”µæœºä¸­çš„æ•°æ®
 		
 			
 		s16 value = (msg->Data[2*i] << 8) | msg->Data[2*i+1];
@@ -42,10 +43,10 @@ void vmCtrlMsgRecieve(CanRxMsg *msg, u8 canNum)
 	}
 }
 
-//¸ù¾Ý×ÜÏßºÍµç»úidÐÞ¸Äµç»úÐÅÏ¢
-//motorId ÒªÐÞ¸ÄµÄµç»úid
-//canNum:¹ÒÔØµÄcan×ÜÏß
-//msg:can·¢ËÍ¹ýÀ´µÄÐÅÏ¢£¬¿ÉÄÜÊÇ¼ÓËÙ¶ÈÒ²¿ÉÄÜÊÇ×ªËÙ£¬È¡¾öÓÚºê¶¨ÒåVM_CONTROL_TYPE
+//æ ¹æ®æ€»çº¿å’Œç”µæœºidä¿®æ”¹ç”µæœºä¿¡æ¯
+//motorId è¦ä¿®æ”¹çš„ç”µæœºid
+//canNum:æŒ‚è½½çš„canæ€»çº¿
+//msg:canå‘é€è¿‡æ¥çš„ä¿¡æ¯ï¼Œå¯èƒ½æ˜¯åŠ é€Ÿåº¦ä¹Ÿå¯èƒ½æ˜¯è½¬é€Ÿï¼Œå–å†³äºŽå®å®šä¹‰VM_CONTROL_TYPE
 void vmMotorCtrlMsgReviece(s16 motorId, u8 canNum, s16 msg)
 {
 	vm_virtualMotor_t *start;
@@ -78,7 +79,7 @@ void vmMotorCtrlMsgReviece(s16 motorId, u8 canNum, s16 msg)
 	}
 }
 
-//FreeRTOSµ÷ÓÃµÄÈÎÎñ
+//FreeRTOSè°ƒç”¨çš„ä»»åŠ¡
 void virtualMotorTask(void *pvParameters)
 {
 	virtualMotorTaskInit();
@@ -102,7 +103,7 @@ void virtualMotorTask(void *pvParameters)
 
 void virtualMotorTaskInit()
 {
-	//µ÷ÓÃvirtualMotorInitº¯Êý ³õÊ¼»¯¸÷¸öµç»ú
+	//è°ƒç”¨virtualMotorInitå‡½æ•° åˆå§‹åŒ–å„ä¸ªç”µæœº
 	virtualMotorInit(virtualMotorTaskStructure.vmCan1MotorList + VM_CHASSIS_MOTOR_1, 0x201, 8191, 0, 1000);
 	virtualMotorInit(virtualMotorTaskStructure.vmCan1MotorList + VM_CHASSIS_MOTOR_2, 0x202, 8191, 0, 1000);
 	virtualMotorInit(virtualMotorTaskStructure.vmCan1MotorList + VM_CHASSIS_MOTOR_3, 0x203, 8191, 0, 1000);
@@ -113,10 +114,10 @@ void virtualMotorTaskInit()
 	virtualMotorInit(virtualMotorTaskStructure.vmCan2MotorList + VM_SHOOT_LEFT, 0x205, 8191, 0, 1000);
 	virtualMotorInit(virtualMotorTaskStructure.vmCan2MotorList + VM_SHOOT_RIGHE, 0x206, 8191, 0, 1000);
 	virtualMotorInit(virtualMotorTaskStructure.vmCan2MotorList + VM_SHOOT_PLATE, 0x207, 8191, 0, 1000);
-	//ÅäÖÃvirtualMotorTaskStructure½á¹¹Ìå
-	virtualMotorTaskStructure.vmFeedbackHz = VM_FEEDBACK_HZ;	//·´À¡µÄÆµÂÊ£¬×îºÃÄÜ±»1000Õû³ý
-	virtualMotorTaskStructure.vmCan2SendFun = vmCan2SendFun;	//·¢ËÍcan2ÐÅÏ¢µÄº¯ÊýÖ¸Õë¸³Öµ
-	virtualMotorTaskStructure.vmCan1SendFun = vmCan1SendFun;	//·¢ËÍcan1ÐÅÏ¢µÄº¯ÊýÖ¸Õë¸³Öµ
+	//é…ç½®virtualMotorTaskStructureç»“æž„ä½“
+	virtualMotorTaskStructure.vmFeedbackHz = VM_FEEDBACK_HZ;	//åé¦ˆçš„é¢‘çŽ‡ï¼Œæœ€å¥½èƒ½è¢«1000æ•´é™¤
+	virtualMotorTaskStructure.vmCan2SendFun = vmCan2SendFun;	//å‘é€can2ä¿¡æ¯çš„å‡½æ•°æŒ‡é’ˆèµ‹å€¼
+	virtualMotorTaskStructure.vmCan1SendFun = vmCan1SendFun;	//å‘é€can1ä¿¡æ¯çš„å‡½æ•°æŒ‡é’ˆèµ‹å€¼
 	
 }
 
@@ -150,11 +151,11 @@ void vmSendMotorMsg(vm_virtualMotor_t *theMotor, void (*vmSendFun)(CanTxMsg msg)
 		vmSendFun(msg);
 }
 
-//³õÊ¼»¯Ò»¸öÐéÄâµÄµç»ú
-//motor:Òª³õÊ¼»¯µÄµç»úµÄ½á¹¹ÌåÖ¸Õë
-//maxPos:µç»ú·´À¡µÄ×î´óÎ»ÖÃ£¬´ó½®µÄµç»úÉèÖÃ³É8191
-//minPos£º·´À¡µÄ×îÐ¡Î»ÖÃ£¬´ó½®µÄµç»úÉèÖÃ³É0
-//maxRpm£º×ªËÙÉÏÏÞ
+//åˆå§‹åŒ–ä¸€ä¸ªè™šæ‹Ÿçš„ç”µæœº
+//motor:è¦åˆå§‹åŒ–çš„ç”µæœºçš„ç»“æž„ä½“æŒ‡é’ˆ
+//maxPos:ç”µæœºåé¦ˆçš„æœ€å¤§ä½ç½®ï¼Œå¤§ç–†çš„ç”µæœºè®¾ç½®æˆ8191
+//minPosï¼šåé¦ˆçš„æœ€å°ä½ç½®ï¼Œå¤§ç–†çš„ç”µæœºè®¾ç½®æˆ0
+//maxRpmï¼šè½¬é€Ÿä¸Šé™
 void virtualMotorInit(vm_virtualMotor_t *motor, s16 id, s16 maxPos, s16 minPos, s16 maxRpm)
 {
 	motor->id = id;
